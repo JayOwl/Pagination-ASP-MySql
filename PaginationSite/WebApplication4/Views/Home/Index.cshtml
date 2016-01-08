@@ -1,0 +1,66 @@
+﻿@model PagedList.IPagedList<WebApplication4.Product>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+      <!---  <th>Product Name</th>-->
+        <th>@Html.ActionLink("Product", "Index", new { sortOrder = ViewBag.NameSortParm })</th>
+        <th>@Html.ActionLink("ProductID", "Index", new { sortOrder = ViewBag.NameSortParm })</th>
+        <th>@Html.ActionLink("Manufacturer Information", "Index", new { sortOrder = ViewBag.DateSortParm })</th>
+        <th>@Html.ActionLink("mfgDiscount Information", "Index", new { sortOrder = ViewBag.DateSortParm })</th>
+        <th>@Html.ActionLink("Price Information", "Index", new { sortOrder = ViewBag.DateSortParm })</th>
+        <th>@Html.ActionLink("Vendor Information", "Index", new { sortOrder = ViewBag.DateSortParm })</th>
+        <th></th>
+    </tr>
+
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.productID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Manufacturer.mfg)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Manufacturer.mfgDiscount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.vendor)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.productID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.productID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.productID })
+            </td>
+        </tr>
+    }
+</table>
+@using (Html.BeginForm())
+{
+    <p>
+        Find by Product name or Manufacturer: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
+ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index",
+new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
